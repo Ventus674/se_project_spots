@@ -66,10 +66,23 @@ function closeModal(modal) {
   modal.classList.remove("modal_is-opened");
 }
 
+const modalClose = document.querySelectorAll(".modal");
+
+modalClose.forEach((modal) => {
+  modal.addEventListener("click", closeModal);
+});
+
+function handleEscape(event) {
+  if (event.key === "Escape") {
+    const openModal = document.querySelector(".modal_is-opened");
+  }
+}
+
 editProfileBtn.addEventListener("click", function () {
   openModal(editProfileModal);
   editProfileNameInput.value = profileNameEl.textContent;
   editProfileDescriptionInput.value = profileDescriptionEl.textContent;
+  resetValidation;
 });
 
 editProfileClosedBtn.addEventListener("click", function () {
