@@ -31,6 +31,7 @@
   background-color: #fff;
   padding: 32px 50px;
   position: relative;
+  box-sizing: border-box;
 }
 
 .modal__image-container {
@@ -48,6 +49,7 @@
 
 .modal__caption {
   color: white;
+  background-color: #212121;
 }
 
 .modal__close-btn {
@@ -58,6 +60,10 @@
   background-color: transparent;
   color: #212121;
   cursor: pointer;
+}
+
+.modal__close-btn:hover {
+  opacity: 40%;
 }
 
 .modal__close-btn_type_preview {
@@ -129,6 +135,11 @@
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
+  border: none;
+}
+
+.modal__submit-btn {
+  opacity: 50%;
 }
 
 .modal__submit-btn_inactive {
