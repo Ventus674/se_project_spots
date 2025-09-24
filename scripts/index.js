@@ -64,17 +64,25 @@ function openModal(modal) {
 
 function closeModal(modal) {
   modal.classList.remove("modal_is-opened");
+  document.removeEventListener("keydown", handleEscape);
 }
 
 const modalClose = document.querySelectorAll(".modal");
 
 modalClose.forEach((modal) => {
-  modal.addEventListener("click", closeModal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal(modal);
+    }
+  });
 });
 
 function handleEscape(event) {
   if (event.key === "Escape") {
     const openModal = document.querySelector(".modal_is-opened");
+    if (openModalEl) {
+      closeModal(openModalEl);
+    }
   }
 }
 
@@ -82,7 +90,10 @@ editProfileBtn.addEventListener("click", function () {
   openModal(editProfileModal);
   editProfileNameInput.value = profileNameEl.textContent;
   editProfileDescriptionInput.value = profileDescriptionEl.textContent;
-  resetValidation;
+  const inputList = Array.from(
+    editProfileForm.querySelectorAll(".modal__input")
+  );
+  resetValidation(editProfileForm, inputList, settings);
 });
 
 editProfileClosedBtn.addEventListener("click", function () {
@@ -105,7 +116,6 @@ function handleEditProfileSubmit(evt) {
   evt.preventDefault();
   profileNameEl.textContent = editProfileNameInput.value;
   profileDescriptionEl.textContent = editProfileDescriptionInput.value;
-  disableButton(settings);
   closeModal(editProfileModal);
 }
 
