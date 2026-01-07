@@ -1,3 +1,5 @@
+import { enableValidation, validationConfig } from "../scripts/validation";
+import "./index.css";
 const initialCards = [
   {
     name: "Golden Gate Bridge",
@@ -169,3 +171,5 @@ function getCardElement(data) {
 
   return cardElement;
 }
+
+enableValidation(validationConfig);
