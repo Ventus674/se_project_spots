@@ -21,7 +21,7 @@ class Api {
 
   //Implement post /cards
   getUserInfo() {
-    return fetch(`${this._baseUrl}/card`, {
+    return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,
     }).then((res) => {
       if (res.ok) {
