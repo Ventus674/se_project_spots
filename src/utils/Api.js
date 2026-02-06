@@ -12,10 +12,13 @@ class Api {
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,
     }).then((res) => {
+      _checkResponse(res) {
       if (res.ok) {
         return res.json();
       }
       return Promise.reject(`Error: ${res.status}`);
+      .then(this._checkResponse)
+    }
     });
   }
 

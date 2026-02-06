@@ -2,6 +2,7 @@ require("./index.css");
 const {
   enableValidation,
   validationConfig,
+  resetValidation,
 } = require("../scripts/validation.js");
 const Api = require("../utils/Api.js");
 /* const initialCards = [
@@ -135,7 +136,7 @@ editProfileBtn.addEventListener("click", function () {
   const inputList = Array.from(
     editProfileForm.querySelectorAll(".modal__input"),
   );
-  resetValidation(editProfileForm, inputList, settings);
+  resetValidation(editProfileForm, inputList, validationConfig);
 });
 
 editProfileClosedBtn.addEventListener("click", function () {
@@ -172,7 +173,7 @@ function handleEditProfileSubmit(evt) {
     })
     .catch(console.error)
     .finally(() => {
-      submitBtn.textcontent = "Save";
+      submitBtn.textContent = "Save";
     });
 }
 
@@ -186,11 +187,12 @@ function handleAddCardSubmit(evt) {
   };
   api
     .addCard({ name: nameInput.value, link: linkInput.value })
-    .then(() => console.log("save"));
+    .then(() => {
   const cardElement = getCardElement(inputValues);
   cardsList.prepend(cardElement);
   closeModal(newPostModal);
   evt.target.reset();
+    });
 }
 
 addCardFormElement.addEventListener("submit", handleAddCardSubmit);
@@ -211,15 +213,20 @@ function getCardElement(data) {
   }
   console.log(data.isLiked);
   cardLikeBtnEl.addEventListener("click", (evt) => {
-    cardLikeBtnEl.classList.toggle("card__like-btn_active");
-    const isLiked = evt.target.classList.contains("card__like-btn_active");
+    .then(() => {
+      cardLikeBtnEl.classList.toggle("card__like-btn_active");
+    });
+    .catch(console.error)
+      const isLiked = evt.target.classList.contains("card__like-btn_active");
     api.changeLikeStatus(data._id, isLiked);
   });
 
   const cardDeleteBtnEl = cardElement.querySelector(".card__delete-btn");
   cardDeleteBtnEl.addEventListener("click", (evt) => {
     cardElement.remove();
-    api.deleteCard(data._id);
+    .then(() => {
+      api.deleteCard(data._id);
+    });
   });
 
   //likeButton.addEventListener("click", (evt) => cardLikeBtnEl(data._id));
@@ -240,7 +247,7 @@ function getCardElement(data) {
     openModal(deleteModal);
   }
 
-  deleteForm.addEventListener("submit", handleDeleteSubmit);
+  
 
   //Finish avatar submission handler
   function handleAvatarSubmit(evt) {
@@ -254,13 +261,7 @@ function getCardElement(data) {
 
       .catch(console.error);
   }
-
-  avatarForm.addEventListener("submit", handleAvatarSubmit);
-
-  avatarModalBtn.addEventListener("click", () => {
-    openModal(avatarModal);
-  });
-
+ 
   cardImageEl.addEventListener("click", () => {
     previewImageEl.src = data.link;
     previewImageEl.alt = data.name;
@@ -270,5 +271,13 @@ function getCardElement(data) {
 
   return cardElement;
 }
+
+ avatarModalBtn.addEventListener("click", () => {
+    openModal(avatarModal);
+  });
+
+avatarForm.addEventListener("submit", handleAvatarSubmit);
+
+deleteForm.addEventListener("submit", handleDeleteSubmit);
 
 enableValidation(validationConfig);
