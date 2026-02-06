@@ -21,7 +21,7 @@ class Api {
 
   //Implement post /cards
   getUserInfo() {
-    return fetch(`${this._baseUrl}/cards`, {
+    return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
     }).then((res) => {
       if (res.ok) {
@@ -87,8 +87,9 @@ class Api {
     });
   }
   changeLikeStatus(id, isLiked) {
+    console.log(isLiked);
     return fetch(`${this._baseUrl}/cards/${id}/Likes`, {
-      method: isLiked ? "DELETE" : "PUT",
+      method: isLiked ? "PUT" : "DELETE",
       headers: this._headers,
     }).then((res) => {
       if (res.ok) {
@@ -96,6 +97,16 @@ class Api {
       }
       return Promise.reject(`Error: ${res.status}`);
     });
+  }
+  addCard({ name, link }) {
+    return fetch(`${this._baseUrl}/cards`, {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({
+        name,
+        link,
+      }),
+    }).then(this._handleServerResponse);
   }
 }
 

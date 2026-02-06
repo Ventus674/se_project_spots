@@ -46,15 +46,16 @@ const api = new Api({
 //Destructure the second item in the callback of .then()
 api
   .getAppInfo()
-  .then(([cards]) => {
+  .then(([cards, user]) => {
     cards.forEach(function (item) {
       const cardElement = getCardElement(item);
       cardsList.append(cardElement);
     });
 
-    //handle the users info
-    //set the src of the avatar image
-    //set the textcontent of both text elements
+    console.log(user);
+    avatarImage.src = user.avatar;
+    profileNameEl.textContent = user.name;
+    profileDescriptionEl.textContent = user.about;
   })
   .catch(console.error);
 
@@ -92,6 +93,7 @@ const avatarForm = avatarModal.querySelector(".modal__form");
 const avatarSubmitBtn = avatarModal.querySelector(".modal__submit-btn");
 const avatarModalClosedBtn = avatarModal.querySelector(".modal__close-btn");
 const avatarInput = avatarModal.querySelector("#profile-avatar-input");
+const avatarImage = document.querySelector(".profile__avatar");
 
 const deleteModal = document.querySelector("#delete-modal");
 const deleteForm = deleteModal.querySelector(".modal__form");
@@ -182,6 +184,9 @@ function handleAddCardSubmit(evt) {
     name: nameInput.value,
     link: linkInput.value,
   };
+  api
+    .addCard({ name: nameInput.value, link: linkInput.value })
+    .then(() => console.log("save"));
   const cardElement = getCardElement(inputValues);
   cardsList.prepend(cardElement);
   closeModal(newPostModal);
@@ -201,14 +206,20 @@ function getCardElement(data) {
   cardTitleEl.textContent = data.name;
 
   const cardLikeBtnEl = cardElement.querySelector(".card__like-btn");
-  cardLikeBtnEl.addEventListener("click", () => {
+  if (data.isLiked) {
+    cardLikeBtnEl.classList.add("card__like-btn_active");
+  }
+  console.log(data.isLiked);
+  cardLikeBtnEl.addEventListener("click", (evt) => {
     cardLikeBtnEl.classList.toggle("card__like-btn_active");
+    const isLiked = evt.target.classList.contains("card__like-btn_active");
+    api.changeLikeStatus(data._id, isLiked);
   });
 
   const cardDeleteBtnEl = cardElement.querySelector(".card__delete-btn");
   cardDeleteBtnEl.addEventListener("click", (evt) => {
     cardElement.remove();
-    data._id.remove();
+    api.deleteCard(data._id);
   });
 
   //likeButton.addEventListener("click", (evt) => cardLikeBtnEl(data._id));
@@ -233,10 +244,13 @@ function getCardElement(data) {
 
   //Finish avatar submission handler
   function handleAvatarSubmit(evt) {
-    //prevent behavior
+    evt.preventDefault();
     api
       .editAvatarInfo(avatarInput.value)
-      .then((data) => {})
+      .then((data) => {
+        avatarImage.src = data.avatar;
+        closeModal(avatarModal);
+      })
 
       .catch(console.error);
   }
@@ -244,7 +258,7 @@ function getCardElement(data) {
   avatarForm.addEventListener("submit", handleAvatarSubmit);
 
   avatarModalBtn.addEventListener("click", () => {
-    openModal(cardModal);
+    openModal(avatarModal);
   });
 
   cardImageEl.addEventListener("click", () => {
