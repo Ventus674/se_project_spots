@@ -185,14 +185,12 @@ function handleAddCardSubmit(evt) {
     name: nameInput.value,
     link: linkInput.value,
   };
-  api
-    .addCard({ name: nameInput.value, link: linkInput.value })
-    .then(() => {
-  const cardElement = getCardElement(inputValues);
-  cardsList.prepend(cardElement);
-  closeModal(newPostModal);
-  evt.target.reset();
-    });
+  api.addCard({ name: nameInput.value, link: linkInput.value }).then(() => {
+    const cardElement = getCardElement(inputValues);
+    cardsList.prepend(cardElement);
+    closeModal(newPostModal);
+    evt.target.reset();
+  });
 }
 
 addCardFormElement.addEventListener("submit", handleAddCardSubmit);
@@ -211,22 +209,16 @@ function getCardElement(data) {
   if (data.isLiked) {
     cardLikeBtnEl.classList.add("card__like-btn_active");
   }
-  console.log(data.isLiked);
   cardLikeBtnEl.addEventListener("click", (evt) => {
-    .then(() => {
-      cardLikeBtnEl.classList.toggle("card__like-btn_active");
-    });
-    .catch(console.error)
-      const isLiked = evt.target.classList.contains("card__like-btn_active");
+    cardLikeBtnEl.classList.toggle("card__like-btn_active");
+    const isLiked = evt.target.classList.contains("card__like-btn_active");
     api.changeLikeStatus(data._id, isLiked);
   });
 
   const cardDeleteBtnEl = cardElement.querySelector(".card__delete-btn");
   cardDeleteBtnEl.addEventListener("click", (evt) => {
     cardElement.remove();
-    .then(() => {
-      api.deleteCard(data._id);
-    });
+    api.deleteCard(data._id);
   });
 
   //likeButton.addEventListener("click", (evt) => cardLikeBtnEl(data._id));
@@ -247,8 +239,6 @@ function getCardElement(data) {
     openModal(deleteModal);
   }
 
-  
-
   //Finish avatar submission handler
   function handleAvatarSubmit(evt) {
     evt.preventDefault();
@@ -261,7 +251,7 @@ function getCardElement(data) {
 
       .catch(console.error);
   }
- 
+
   cardImageEl.addEventListener("click", () => {
     previewImageEl.src = data.link;
     previewImageEl.alt = data.name;
@@ -272,9 +262,9 @@ function getCardElement(data) {
   return cardElement;
 }
 
- avatarModalBtn.addEventListener("click", () => {
-    openModal(avatarModal);
-  });
+avatarModalBtn.addEventListener("click", () => {
+  openModal(avatarModal);
+});
 
 avatarForm.addEventListener("submit", handleAvatarSubmit);
 
