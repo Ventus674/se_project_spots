@@ -181,16 +181,37 @@ editProfileForm.addEventListener("submit", handleEditProfileSubmit);
 
 function handleAddCardSubmit(evt) {
   evt.preventDefault();
+
+  // Get the submit button and store original text
+  const submitButton = evt.submitter;
+  const originalText = submitButton.textContent;
+
+  // Set loading state
+  submitButton.textContent = "Saving...";
+  submitButton.disabled = true;
+
   const inputValues = {
     name: nameInput.value,
     link: linkInput.value,
   };
-  api.addCard({ name: nameInput.value, link: linkInput.value }).then(() => {
-    const cardElement = getCardElement(inputValues);
-    cardsList.prepend(cardElement);
-    closeModal(newPostModal);
-    evt.target.reset();
-  });
+
+  api
+    .addCard({ name: nameInput.value, link: linkInput.value })
+    .then(() => {
+      const cardElement = getCardElement(inputValues);
+      cardsList.prepend(cardElement);
+      closeModal(newPostModal);
+      evt.target.reset();
+    })
+    .catch((err) => {
+      console.error("Error adding card:", err);
+      // You might want to show an error message to the user here
+    })
+    .finally(() => {
+      // Always restore button state
+      submitButton.textContent = originalText;
+      submitButton.disabled = false;
+    });
 }
 
 addCardFormElement.addEventListener("submit", handleAddCardSubmit);
@@ -223,16 +244,6 @@ function getCardElement(data) {
 
   //likeButton.addEventListener("click", (evt) => cardLikeBtnEl(data._id));
 
-  function handleDeleteSubmit(evt) {
-    evt.preventDefault();
-    api
-      .deleteCard(selectedCardId)
-      .then(() => {
-        //remove the card and close the modal
-      })
-      .catch(console.error);
-  }
-
   function handleDeleteCard(cardElement, cardId) {
     selectedCard = cardElement;
     selectedCardId = cardId;
@@ -240,17 +251,6 @@ function getCardElement(data) {
   }
 
   //Finish avatar submission handler
-  function handleAvatarSubmit(evt) {
-    evt.preventDefault();
-    api
-      .editAvatarInfo(avatarInput.value)
-      .then((data) => {
-        avatarImage.src = data.avatar;
-        closeModal(avatarModal);
-      })
-
-      .catch(console.error);
-  }
 
   cardImageEl.addEventListener("click", () => {
     previewImageEl.src = data.link;
@@ -262,12 +262,50 @@ function getCardElement(data) {
   return cardElement;
 }
 
+function handleDeleteSubmit(evt) {
+  evt.preventDefault();
+  api
+    .deleteCard(selectedCardId)
+    .then(() => {
+      //remove the card and close the modal
+    })
+    .catch(console.error);
+}
+
+function handleAvatarSubmit(evt) {
+  evt.preventDefault();
+
+  const submitButton = evt.submitter;
+  const originalText = submitButton.textContent;
+
+  // Set loading state
+  submitButton.textContent = "Saving...";
+  submitButton.disabled = true;
+
+  api
+    .editAvatarInfo(avatarInput.value)
+    .then((data) => {
+      avatarImage.src = data.avatar;
+      closeModal(avatarModal);
+      evt.target.reset();
+    })
+
+    .catch((err) => {
+      console.error("Error adding card:", err);
+      // You might want to show an error message to the user here
+    })
+    .finally(() => {
+      // Always restore button state
+      submitButton.textContent = originalText;
+      submitButton.disabled = false;
+    });
+}
+
 avatarModalBtn.addEventListener("click", () => {
   openModal(avatarModal);
 });
 
 avatarForm.addEventListener("submit", handleAvatarSubmit);
-
 deleteForm.addEventListener("submit", handleDeleteSubmit);
 
 enableValidation(validationConfig);
