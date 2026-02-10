@@ -123,8 +123,8 @@ modalClose.forEach((modal) => {
 function handleEscape(event) {
   if (event.key === "Escape") {
     const openModal = document.querySelector(".modal_is-opened");
-    if (openModalEl) {
-      closeModal(openModalEl);
+    if (openModal) {
+      closeModal(openModal);
     }
   }
 }
@@ -231,15 +231,18 @@ function getCardElement(data) {
     cardLikeBtnEl.classList.add("card__like-btn_active");
   }
   cardLikeBtnEl.addEventListener("click", (evt) => {
-    cardLikeBtnEl.classList.toggle("card__like-btn_active");
     const isLiked = evt.target.classList.contains("card__like-btn_active");
-    api.changeLikeStatus(data._id, isLiked);
+    api
+      .changeLikeStatus(data._id, isLiked)
+      .then(() => {
+        cardLikeBtnEl.classList.toggle("card__like-btn_active");
+      })
+      .catch(console.error);
   });
 
   const cardDeleteBtnEl = cardElement.querySelector(".card__delete-btn");
   cardDeleteBtnEl.addEventListener("click", (evt) => {
-    cardElement.remove();
-    api.deleteCard(data._id);
+    handleDeleteCard(cardElement, data._id);
   });
 
   //likeButton.addEventListener("click", (evt) => cardLikeBtnEl(data._id));
@@ -264,12 +267,23 @@ function getCardElement(data) {
 
 function handleDeleteSubmit(evt) {
   evt.preventDefault();
+  const submitButton = evt.submitter;
+  const originalText = submitButton.textContent;
+  // Set loading state
+  submitButton.textContent = "Deleting...";
+  submitButton.disabled = true;
   api
     .deleteCard(selectedCardId)
     .then(() => {
-      //remove the card and close the modal
+      selectedCard.remove(); // here
     })
-    .catch(console.error);
+    .catch(console.error)
+    .finally(() => {
+      // Always restore button state
+      submitButton.textContent = originalText;
+      submitButton.disabled = false;
+      closeModal(deleteModal);
+    });
 }
 
 function handleAvatarSubmit(evt) {
