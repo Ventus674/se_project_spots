@@ -98,6 +98,8 @@ const avatarImage = document.querySelector(".profile__avatar");
 
 const deleteModal = document.querySelector("#delete-modal");
 const deleteForm = deleteModal.querySelector(".modal__form");
+const closeDeleteModalBtn = deleteModal.querySelector(".modal__close-btn");
+const cancelDeleteBtn = deleteModal.querySelector(".modal__cancel-btn");
 
 let selectedCard, selectedCardId;
 function openModal(modal) {
@@ -275,16 +277,23 @@ function handleDeleteSubmit(evt) {
   api
     .deleteCard(selectedCardId)
     .then(() => {
-      selectedCard.remove(); // here
+      selectedCard.remove();
+      closeModal(deleteModal);
     })
     .catch(console.error)
     .finally(() => {
       // Always restore button state
       submitButton.textContent = originalText;
       submitButton.disabled = false;
-      closeModal(deleteModal);
     });
 }
+
+closeDeleteModalBtn.addEventListener("click", function () {
+  closeModal(deleteModal);
+});
+cancelDeleteBtn.addEventListener("click", function () {
+  closeModal(deleteModal);
+});
 
 function handleAvatarSubmit(evt) {
   evt.preventDefault();
