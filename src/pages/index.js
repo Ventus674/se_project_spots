@@ -207,16 +207,15 @@ function handleAddCardSubmit(evt) {
       cardsList.prepend(cardElement);
       closeModal(newPostModal);
       evt.target.reset();
-      disableButton();
+      disableButton(submitButton, validationConfig);
     })
     .catch((err) => {
       console.error("Error adding card:", err);
-      // You might want to show an error message to the user here
+      submitButton.disabled = false;
     })
     .finally(() => {
       // Always restore button state
       submitButton.textContent = originalText;
-      submitButton.disabled = false;
     });
 }
 
@@ -315,17 +314,16 @@ function handleAvatarSubmit(evt) {
       avatarImage.src = data.avatar;
       closeModal(avatarModal);
       evt.target.reset();
-      disableButton();
+      disableButton(submitButton, validationConfig);
     })
 
     .catch((err) => {
       console.error("Error adding card:", err);
-      // You might want to show an error message to the user here
+      submitButton.disabled = false;
     })
     .finally(() => {
       // Always restore button state
       submitButton.textContent = originalText;
-      submitButton.disabled = false;
     });
 }
 
