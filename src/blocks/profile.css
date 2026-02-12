@@ -4,11 +4,47 @@
   border-bottom: 1px rgba(33, 33, 33, 0.4) solid;
 }
 
+.profile__avatar-container {
+  position: relative;
+  margin-right: 20px;
+}
+
+.profile__avatar-btn {
+  position: absolute;
+  padding: 0;
+  width: 91%;
+  height: 99%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  visibility: hidden;
+  background-color: transparent;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  gap: 8px;
+}
+
+.profile__avatar-container:hover .profile__avatar-btn {
+  visibility: visible;
+}
+
+.profile__pencil-icon {
+  margin-bottom: 12px;
+}
+
 .profile__avatar {
   margin-right: 20px;
   height: 190px;
   width: 190px;
   border-radius: 8px;
+}
+
+.profile__avatar-btn::after {
+  font-size: 16px;
+  color: #fcf5e5;
 }
 
 .profile__column {
@@ -92,6 +128,22 @@
     align-items: center;
     text-align: center;
     padding-top: 20px;
+  }
+
+  .profile__avatar-btn {
+    visibility: invisible;
+    width: 100%;
+    height: 85%;
+    background-image: url("../images/pencil-icon.png");
+    background-repeat: no-repeat;
+    background-position: 53px 53px;
+  }
+
+  .profile__pencil-icon {
+    visibility: hidden;
+  }
+
+  .profile__avatar-btn::after {
   }
 
   .profile__avatar {
