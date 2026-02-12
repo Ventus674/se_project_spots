@@ -3,6 +3,7 @@ const {
   enableValidation,
   validationConfig,
   resetValidation,
+  disableButton,
 } = require("../scripts/validation.js");
 const Api = require("../utils/Api.js");
 /* const initialCards = [
@@ -92,7 +93,9 @@ const avatarModalBtn = document.querySelector(".profile__avatar-btn");
 const avatarModal = document.querySelector("#avatar-modal");
 const avatarForm = avatarModal.querySelector(".modal__form");
 const avatarSubmitBtn = avatarModal.querySelector(".modal__submit-btn");
-const avatarModalClosedBtn = avatarModal.querySelector(".modal__close-btn");
+const avatarModalClosedBtn = avatarModal.querySelector(
+  ".modal__avatar_close-btn",
+);
 const avatarInput = avatarModal.querySelector("#profile-avatar-input");
 const avatarImage = document.querySelector(".profile__avatar");
 
@@ -199,11 +202,12 @@ function handleAddCardSubmit(evt) {
 
   api
     .addCard({ name: nameInput.value, link: linkInput.value })
-    .then(() => {
-      const cardElement = getCardElement(inputValues);
+    .then((newCard) => {
+      const cardElement = getCardElement(newCard);
       cardsList.prepend(cardElement);
       closeModal(newPostModal);
       evt.target.reset();
+      disableButton();
     })
     .catch((err) => {
       console.error("Error adding card:", err);
@@ -311,6 +315,7 @@ function handleAvatarSubmit(evt) {
       avatarImage.src = data.avatar;
       closeModal(avatarModal);
       evt.target.reset();
+      disableButton();
     })
 
     .catch((err) => {
@@ -326,6 +331,9 @@ function handleAvatarSubmit(evt) {
 
 avatarModalBtn.addEventListener("click", () => {
   openModal(avatarModal);
+});
+avatarModalClosedBtn.addEventListener("click", function () {
+  closeModal(avatarModal);
 });
 
 avatarForm.addEventListener("submit", handleAvatarSubmit);
